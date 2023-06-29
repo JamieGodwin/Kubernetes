@@ -44,6 +44,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
 ## Pods with YAML
 - When writing a YAML file, we have several essential parts:
     - apiVersion: v1 (We have multiple versions)
+
     ![](1.1.png)
     - kind: Pod (Again, we can have different kinds, like replicas)
     - metadata: (information about the object)
@@ -55,6 +56,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
         - containers: 
             - name: nginx-controller
             - image: nginx (docker image name)
+
 ![](1.2.png)
 - `kubectl get pods` shows the pods available
 
@@ -62,6 +64,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
 - Make sure Docker is running, and Kubernetes is enabled.
 - Open with `vim pod.yaml`
 - Add the following:
+
 ![](1.3.png)
 - Press `exit` and add `:wq`.
 - Run the command `kubectl apply -f pod.yaml` to create the pod.
@@ -73,6 +76,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
 A replication controller can control pods over multiple nodes.
 
 - In order to do this, do the following yaml file:
+
 ![](1.4.png)
 - Here, we're creating a replication controller. This allows us to create replicas of pods.
 - The template that we are adding here is the metadata and spec for the individual pods for nginx.
@@ -82,6 +86,7 @@ A replication controller can control pods over multiple nodes.
 Replicas allow for high availability where you state a number of pods to run, and then the replication controller can bring up new pods to meet the replica set if any go down.
 
 - To create one, create a yaml file with the following:
+
 ![](1.5.png)
 - It's very similar to the replica controller.
 - Here however, we added the selector at the bottom. This allows us to have the ReplicaSet look at existing pods with the provided label and see them as a replica. (We have given the label `type: front-end` to the nginx pod before)
@@ -94,6 +99,7 @@ Replicas allow for high availability where you state a number of pods to run, an
 ## Deployment
 We can deploy the application in multiple instances in different environments such as production, development etc. You can update changes or rollback in certain instances.Deployments are one level higher and can use replica sets and also control updates and changes. 
 - The file we use to run this is essentially the same as the ReplicaSet, however with the name changed.
+
 ![](1.6.png)
 - We then run the commnd `kubectl create -f deployment-definition.yaml`
 - We then see this using `kubectl get deployments`
@@ -101,3 +107,33 @@ We can deploy the application in multiple instances in different environments su
 - `kubectl get all` shows everything created. 
 
 - We can generate a YAML deployment file with `kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > file-name.yaml`
+
+## Services
+Services enable connectivity between groups of pods, they enable frontend apps to be made available to end users, helps establish connection to backend apps and to external data sources etc.
+- NodePort: It allows external access to an application running inside the cluster. It allocates a specific port on each node, known as the node port, and forwards traffic to the service on that port. 
+   
+    - targetPort: The port on the pod that the service forwards to. 
+    - port: The port on the service itself
+
+![](1.7.png)
+    
+- Here, the selector is the label from the pod we want to connect to. This allows for a connection between the service and the pod. 
+- We can then run `kubectl create -f service-definition.yaml`
+- `kubectl get service` will then show the services.
+- If you have multiple pods with the same label, it will connect to all of them. This acts as a natural load balancer. 
+- If you have the pods spread across multiple nodes, it will automatically create a service spanning across all of them. 
+
+### Cluster IP
+- It creates a virtual IP address inside the cluster to enable communication between different services. The individual pods have their own Ip addresses, which can go down at any time. Therefore, a cluster IP is assigned. This allows the for example the front and backend pods to communicate a lot easiar using these IP addresses. 
+- We can do this by:
+
+![](1.8.png)
+- Here, we add the label of the pods in the selector. 
+- We then run `kubectl create -f service-definition.yaml`
+- `kubectl get services` then will show us the IP address of the service. 
+
+### Load Balancer
+- We can provision the load balancer from suported clouds, like azure or AWS. 
+![](1.9.png)
+
+## Namespaces
