@@ -69,8 +69,6 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
 - When you run `kubectl get pods`, the ready section tells you how many containers are running. 
 - In order to edit the vim file, we go into the file by calling its name. We can then use the `i` key, which allows us to edit.
 
-## Replica sets
-Replicas allow for high availability where you state a number of pods to run, and then the replication controller can bring up new pods to meet the replica set if any go down.
 ### Replication controller
 A replication controller can control pods over multiple nodes.
 
@@ -78,3 +76,12 @@ A replication controller can control pods over multiple nodes.
 ![](1.4.png)
 - Here, we're creating a replication controller. This allows us to create replicas of pods.
 - The template that we are adding here is the metadata and spec for the individual pods for nginx.
+- `kubectl get replicationcontroller` allows us to see the controller. 
+
+## Replica sets
+Replicas allow for high availability where you state a number of pods to run, and then the replication controller can bring up new pods to meet the replica set if any go down.
+
+- To create one, create a yaml file with the following:
+![](1.5.png)
+- It's very similar to the replica controller.
+- Here however, we added the selector at the bottom. This allows us to have the ReplicaSet look at existing pods with the provided label and see them as a replica. (We have given the label `type: front-end` to the nginx pod before)
