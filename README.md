@@ -85,3 +85,19 @@ Replicas allow for high availability where you state a number of pods to run, an
 ![](1.5.png)
 - It's very similar to the replica controller.
 - Here however, we added the selector at the bottom. This allows us to have the ReplicaSet look at existing pods with the provided label and see them as a replica. (We have given the label `type: front-end` to the nginx pod before)
+- We can scale the ReplicaSet in a few ways:
+    - `kubectl replace -f replicaset-definition.yaml`
+    - `kubectl scale --replicas=6 -f replicaset-definition.yaml`
+    - `kubectl scale --replicas=6 replicaset myapp-replicaset`
+- We can inspect the replicaset with `kubectl describe replicaset`
+
+## Deployment
+We can deploy the application in multiple instances in different environments such as production, development etc. You can update changes or rollback in certain instances.Deployments are one level higher and can use replica sets and also control updates and changes. 
+- The file we use to run this is essentially the same as the ReplicaSet, however with the name changed.
+![](1.6.png)
+- We then run the commnd `kubectl create -f deployment-definition.yaml`
+- We then see this using `kubectl get deployments`
+- The deployment automatically will create a ReplicaSet. 
+- `kubectl get all` shows everything created. 
+
+- We can generate a YAML deployment file with `kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > file-name.yaml`
