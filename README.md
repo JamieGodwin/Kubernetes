@@ -45,7 +45,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
 - When writing a YAML file, we have several essential parts:
     - apiVersion: v1 (We have multiple versions)
 
-    ![](1.1.png)
+    ![](images/1.1.png)
     - kind: Pod (Again, we can have different kinds, like replicas)
     - metadata: (information about the object)
         - name: myapp-pod
@@ -57,7 +57,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
             - name: nginx-controller
             - image: nginx (docker image name)
 
-![](1.2.png)
+![](images/1.2.png)
 - `kubectl get pods` shows the pods available
 
 ## Creating a pod definition file
@@ -65,7 +65,7 @@ Theres usually a 1 to 1 ration of pod and container. To scale within a node, you
 - Open with `vim pod.yaml`
 - Add the following:
 
-![](1.3.png)
+![](images/1.3.png)
 - Press `exit` and add `:wq`.
 - Run the command `kubectl apply -f pod.yaml` to create the pod.
 - `kubectl describe pod nginx` gives a detailed reading of nginx pod.
@@ -77,7 +77,7 @@ A replication controller can control pods over multiple nodes.
 
 - In order to do this, do the following yaml file:
 
-![](1.4.png)
+![](images/1.4.png)
 - Here, we're creating a replication controller. This allows us to create replicas of pods.
 - The template that we are adding here is the metadata and spec for the individual pods for nginx.
 - `kubectl get replicationcontroller` allows us to see the controller. 
@@ -87,7 +87,7 @@ Replicas allow for high availability where you state a number of pods to run, an
 
 - To create one, create a yaml file with the following:
 
-![](1.5.png)
+![](images/1.5.png)
 - It's very similar to the replica controller.
 - Here however, we added the selector at the bottom. This allows us to have the ReplicaSet look at existing pods with the provided label and see them as a replica. (We have given the label `type: front-end` to the nginx pod before)
 - We can scale the ReplicaSet in a few ways:
@@ -100,7 +100,7 @@ Replicas allow for high availability where you state a number of pods to run, an
 We can deploy the application in multiple instances in different environments such as production, development etc. You can update changes or rollback in certain instances.Deployments are one level higher and can use replica sets and also control updates and changes. 
 - The file we use to run this is essentially the same as the ReplicaSet, however with the name changed.
 
-![](1.6.png)
+![](images/1.6.png)
 - We then run the commnd `kubectl create -f deployment-definition.yaml`
 - We then see this using `kubectl get deployments`
 - The deployment automatically will create a ReplicaSet. 
@@ -115,7 +115,7 @@ Services enable connectivity between groups of pods, they enable frontend apps t
     - targetPort: The port on the pod that the service forwards to. 
     - port: The port on the service itself
 
-![](1.7.png)
+![](images/1.7.png)
     
 - Here, the selector is the label from the pod we want to connect to. This allows for a connection between the service and the pod. 
 - We can then run `kubectl create -f service-definition.yaml`
@@ -127,14 +127,14 @@ Services enable connectivity between groups of pods, they enable frontend apps t
 - It creates a virtual IP address inside the cluster to enable communication between different services. The individual pods have their own Ip addresses, which can go down at any time. Therefore, a cluster IP is assigned. This allows the for example the front and backend pods to communicate a lot easiar using these IP addresses. 
 - We can do this by:
 
-![](1.8.png)
+![](images/1.8.png)
 - Here, we add the label of the pods in the selector. 
 - We then run `kubectl create -f service-definition.yaml`
 - `kubectl get services` then will show us the IP address of the service. 
 
 ### Load Balancer
 - We can provision the load balancer from suported clouds, like azure or AWS. 
-![](1.9.png)
+![](images/1.9.png)
 
 ## Namespaces
 Namespaces help to isolate resources such as having a 'Dev' namespace, for example, so you do not accidentally modify resources in Production.In each Namespace, resources communicate with each other using their names such as 'db-service'. For a resource outside of the namespace to connect, it needs to append the name of the namespace e.g. 'db-service.dev.svc.cluster.local'. Different permissions can also be set in different namespaces. 
@@ -143,12 +143,12 @@ Namespaces help to isolate resources such as having a 'Dev' namespace, for examp
 - However, we can create it in a different namespace, for example: `kubectl create -f pod-definition.yaml --namespace=dev`
 - We could also instead move the namespace into the file. 
 
-![](2.0.png)
+![](images/2.0.png)
 
 ### Create a new namespace
 We can create a simple YAML file to do so.
 
-![](2.1.png)
+![](images/2.1.png)
 - We can then run: `kubectl create -f namespace-dev.yaml`
 - Or we could create one by running: `kubectl create namespace dev`. This creates a `dev` namespace. 
 
@@ -160,7 +160,7 @@ We can create a simple YAML file to do so.
 ### Limiting resources in a namespace
 - We can limit the amount of resources in a namespace by running the following file: 
 
-![](2.2.png)
+![](images/2.2.png)
 - In here we can specify the specific namespace, and then the limits under `spec`.
 
 ## Imperative vs Declarative 
