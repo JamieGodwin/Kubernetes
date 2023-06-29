@@ -42,4 +42,39 @@ Pods are single instances of an application, one container instance per pod, the
 Theres usually a 1 to 1 ration of pod and container. To scale within a node, you add more pods. You can have multiple containers in a pod, however they're usually different containers. 
 
 ## Pods with YAML
-- 
+- When writing a YAML file, we have several essential parts:
+    - apiVersion: v1 (We have multiple versions)
+    ![](1.1.png)
+    - kind: Pod (Again, we can have different kinds, like replicas)
+    - metadata: (information about the object)
+        - name: myapp-pod
+        - labels:
+            - app: myapp (key-value pair)
+            - type: front-end
+    - spec: (dictionary)
+        - containers: 
+            - name: nginx-controller
+            - image: nginx (docker image name)
+![](1.2.png)
+- `kubectl get pods` shows the pods available
+
+## Creating a pod definition file
+- Make sure Docker is running, and Kubernetes is enabled.
+- Open with `vim pod.yaml`
+- Add the following:
+![](1.3.png)
+- Press `exit` and add `:wq`.
+- Run the command `kubectl apply -f pod.yaml` to create the pod.
+- `kubectl describe pod nginx` gives a detailed reading of nginx pod.
+- When you run `kubectl get pods`, the ready section tells you how many containers are running. 
+- In order to edit the vim file, we go into the file by calling its name. We can then use the `i` key, which allows us to edit.
+
+## Replica sets
+Replicas allow for high availability where you state a number of pods to run, and then the replication controller can bring up new pods to meet the replica set if any go down.
+### Replication controller
+A replication controller can control pods over multiple nodes.
+
+- In order to do this, do the following yaml file:
+![](1.4.png)
+- Here, we're creating a replication controller. This allows us to create replicas of pods.
+- The template that we are adding here is the metadata and spec for the individual pods for nginx.
