@@ -137,3 +137,40 @@ Services enable connectivity between groups of pods, they enable frontend apps t
 ![](1.9.png)
 
 ## Namespaces
+Namespaces help to isolate resources such as having a 'Dev' namespace, for example, so you do not accidentally modify resources in Production.In each Namespace, resources communicate with each other using their names such as 'db-service'. For a resource outside of the namespace to connect, it needs to append the name of the namespace e.g. 'db-service.dev.svc.cluster.local'. Different permissions can also be set in different namespaces. 
+
+- When we create a pod normally, it's created in the dafault namespace.
+- However, we can create it in a different namespace, for example: `kubectl create -f pod-definition.yaml --namespace=dev`
+- We could also instead move the namespace into the file. 
+
+![](2.0.png)
+
+### Create a new namespace
+We can create a simple YAML file to do so.
+
+![](2.1.png)
+- We can then run: `kubectl create -f namespace-dev.yaml`
+- Or we could create one by running: `kubectl create namespace dev`. This creates a `dev` namespace. 
+
+### Switching between namespaces
+- We can view pods in different namespaces by: `kubectl get pods --namespace=dev`
+- To switch the dafault to a different namespace, we can run: `kubectl config set-context $(kubectl config current-context) --namespace=dev`
+- To view pods in all namespaces, use: `kubectl get pods --all-namespaces`
+
+### Limiting resources in a namespace
+- We can limit the amount of resources in a namespace by running the following file: 
+
+![](2.2.png)
+- In here we can specify the specific namespace, and then the limits under `spec`.
+
+## Imperative vs Declarative 
+- Imperative: Giving instructions to reach a desired result, specifying how to get to the result.
+    
+    - Instructions: What, how, where...
+    - Commands like: run, create, edit, delete...
+
+- Declarative: you declare/specify the desired result and the system figures out what to do to reach it.
+
+## Apply command
+- The kubectl apply command compares the local configuration file and the last applied configuration before making a decision on what changes are to be made.
+- If we updated a YAML configuration file, we can use `kubectl apply -f deployment.yaml` to update the changes. 
